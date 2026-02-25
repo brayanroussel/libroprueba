@@ -294,7 +294,15 @@
             box-shadow: 0 0 15px var(--gold-glow);
         }
     </style>
-
+    <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/libroprueba/service-worker.js")
+          .then(() => console.log("SW registrado"))
+          .catch(err => console.log("Error SW:", err));
+      });
+    }
+    </script>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon-192.png">
 </head>
@@ -493,3 +501,4 @@
     </script>
 </body>
 </html>
+
