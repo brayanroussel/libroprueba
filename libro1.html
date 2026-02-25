@@ -2,516 +2,408 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ROEN | Roussel Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ROEN Reader | Nativo</title>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root {
-            --neon-accent: #ffcc00; 
-            --deep-black: #080808;
-            --card-bg: #121212;
-            --text-main: #f0f0f0;
-            --text-dim: #a0a0a0;
-            --sidebar-width: 320px;
-            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --gold: #ffcc00;
+            --bg-black: #050505;
+            --surface: #121212;
+            --surface-light: #1a1a1a;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--deep-black);
+            background-color: var(--bg-black);
             color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
-            line-height: 1.8;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- UI COMPONENTS --- */
-
-        /* Barra de progreso superior corregida */
-        #progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.05);
+        /* --- HEADER --- */
+        .header {
+            padding-top: var(--safe-top);
+            height: calc(70px + var(--safe-top));
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-inline: 20px;
             z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        #progress-bar {
-            height: 100%;
-            background: var(--neon-accent);
-            width: 0%;
-            transition: width 0.4s ease-out;
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.6);
-        }
-
-        /* Botón Menú (Mobile) */
-        #menu-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 500;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            color: var(--neon-accent);
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+        .nav-icon {
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            font-size: 1.2rem;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
-        /* Sidebar - Drawer */
-        #sidebar {
-            width: var(--sidebar-width);
-            background: var(--card-bg);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            height: 100vh;
+        .nav-icon:active { transform: scale(0.9); background: var(--gold); color: black; }
+
+        .book-info h1 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); text-align: center; }
+        .book-info p { font-size: 0.85rem; color: var(--text-muted); text-align: center; font-weight: 600; }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.05); }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.5s ease; }
+
+        /* --- DRAWER (INDEX) --- */
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(8px); }
+        .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .drawer {
             position: fixed;
-            left: 0;
-            top: 0;
-            padding: 40px 1.5rem 2rem;
-            z-index: 400;
+            left: 0; top: 0; bottom: 0;
+            width: 85%; max-width: 340px;
+            background: var(--bg-black);
+            z-index: 2001;
+            transform: translateX(-100%);
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
-            transform: translateX(-100%);
-            transition: var(--transition-smooth);
-            will-change: transform;
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
+        .drawer.open { transform: translateX(0); }
 
-        #sidebar.open {
-            transform: translateX(0);
-        }
-
-        /* Botón Volver al Inicio */
-        .back-home {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text-dim);
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 40px;
-            transition: 0.3s;
-            padding: 10px 0;
+        .drawer-header {
+            padding: calc(30px + var(--safe-top)) 24px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .back-home:hover {
-            color: var(--neon-accent);
-        }
-
-        .sidebar-title {
-            font-family: 'Playfair Display', serif;
-            color: white;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-
-        .sidebar-title span {
-            color: var(--neon-accent);
-        }
-
-        /* Índice */
-        #toc-list {
-            list-style: none;
-            overflow-y: auto;
-            flex-grow: 1;
-            scrollbar-width: none;
-        }
-
-        #toc-list::-webkit-scrollbar { display: none; }
-
-        .chapter-group {
-            margin-bottom: 10px;
-        }
-
-        .chapter-header {
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition-smooth);
-            font-weight: 700;
-            color: var(--neon-accent);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        .chapter-pages {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out;
-            padding-left: 10px;
-        }
-
-        .chapter-group.active .chapter-pages {
-            max-height: 500px;
-            margin-top: 10px;
-        }
-
-        .page-item {
-            padding: 12px 15px;
-            margin: 5px 0;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            transition: 0.2s;
+        .back-hub-btn {
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .page-item.active {
-            background: rgba(255, 204, 0, 0.1);
-            color: white;
-            font-weight: 600;
-        }
-
-        /* --- CONTENT AREA --- */
-        main {
-            min-height: 100vh;
-            padding: 100px 7% 120px;
-            max-width: 900px;
-            margin: 0 auto;
-            transition: opacity 0.4s ease;
-        }
-
-        #reader-meta {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .meta-tag {
-            display: inline-block;
-            background: var(--neon-accent);
-            color: black;
-            padding: 2px 10px;
-            font-size: 0.7rem;
-            font-weight: 900;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-        }
-
-        #book-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        #chapter-name {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.2rem, 8vw, 3.8rem);
-            color: white;
-            line-height: 1;
-            font-weight: 900;
-        }
-
-        #content-area {
-            font-size: clamp(1.15rem, 4.5vw, 1.3rem);
-            color: var(--text-dim);
-            text-align: justify;
-            hyphens: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        #content-area p {
-            margin-bottom: 2rem;
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeInParagraph 0.6s forwards;
-        }
-
-        @keyframes fadeInParagraph {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- CONTROLS --- */
-        #controls {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            background: var(--card-bg);
-            padding: 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            z-index: 500;
-        }
-
-        .nav-btn {
-            background: transparent;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            cursor: pointer;
-            font-weight: 800;
-            border-radius: 12px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-        }
-
-        .nav-btn:not(:disabled):hover {
-            color: var(--neon-accent);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.1;
-            cursor: not-allowed;
-        }
-
-        #status-msg {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 25px;
-            background: var(--neon-accent);
-            color: black;
-            font-weight: 900;
+            color: var(--text-muted);
+            text-decoration: none;
             font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
-            border-radius: 50px;
-            z-index: 1000;
-            display: none;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            transition: 0.2s;
         }
+        .back-hub-btn:hover { color: var(--gold); }
 
-        #overlay {
+        .drawer h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; margin-bottom: 5px; }
+        .drawer h2 span { color: var(--gold); }
+
+        .index-content { flex: 1; overflow-y: auto; padding: 20px; }
+
+        /* --- COLLAPSIBLE CHAPTER --- */
+        .chapter-group { margin-bottom: 10px; border-radius: 12px; overflow: hidden; background: var(--surface); }
+        
+        .chapter-trigger {
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .chapter-trigger span { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .chapter-trigger i { transition: transform 0.3s ease; }
+        
+        .chapter-group.active .chapter-trigger { background: var(--surface-light); color: var(--gold); }
+        .chapter-group.active .chapter-trigger i { transform: rotate(180deg); }
+
+        .pages-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(0,0,0,0.2);
+        }
+        .chapter-group.active .pages-list { max-height: 500px; padding-bottom: 10px; }
+
+        .page-item {
+            padding: 14px 20px;
+            margin: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+        }
+        .page-item.active { background: rgba(255, 204, 0, 0.1); color: white; font-weight: 600; }
+
+        /* --- READER AREA --- */
+        .reader-viewport { flex: 1; overflow-y: auto; padding: 40px 24px 120px; -webkit-overflow-scrolling: touch; }
+        .content-container { max-width: 650px; margin: 0 auto; transition: opacity 0.3s ease; }
+        .content-container.loading { opacity: 0; }
+
+        .chapter-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 8px; color: white; line-height: 1.1; }
+        .page-subtitle { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--gold); letter-spacing: 3px; margin-bottom: 35px; }
+        
+        .reader-text { font-size: 1.15rem; line-height: 1.85; color: var(--text-main); text-align: justify; }
+        .reader-text p { margin-bottom: 1.8rem; animation: fadeInUp 0.6s forwards; opacity: 0; transform: translateY(15px); }
+
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NAVIGATION BOTTOM --- */
+        .bottom-nav {
             position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 350;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.4s;
+            bottom: 0; left: 0; right: 0;
+            height: calc(85px + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding-inline: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
         }
 
-        #overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+        .nav-btn-main {
+            background: var(--gold); color: black; border: none; padding: 12px 28px;
+            border-radius: 14px; font-weight: 800; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px;
         }
+        .nav-btn-main:disabled { background: var(--surface); color: var(--text-muted); }
 
-        @media (min-width: 1200px) {
-            #sidebar { transform: translateX(0); width: 340px; }
-            #menu-toggle, #overlay { display: none; }
-            main { margin-left: 340px; max-width: calc(100% - 340px); padding: 100px 12%; }
-            #progress-container { left: 340px; }
-        }
+        .page-badge { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; }
+
     </style>
 </head>
 <body>
 
-    <div id="status-msg">Cargando...</div>
-    <div id="progress-container"><div id="progress-bar"></div></div>
-    
-    <button id="menu-toggle">☰</button>
-    <div id="overlay"></div>
+    <!-- Header App -->
+    <header class="header">
+        <div class="nav-icon" onclick="toggleDrawer(true)">
+            <i data-lucide="align-left"></i>
+        </div>
+        
+        <div class="book-info">
+            <h1>Roussel Books</h1>
+            <p id="ui-chapter-name">Cargando...</p>
+        </div>
 
-    <aside id="sidebar">
-        <a href="index.html" class="back-home">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Volver a RousselBooks
-        </a>
-        <h1 class="sidebar-title">ROEN<span>.</span></h1>
-        <div id="toc-list"></div>
+        <div class="nav-icon" onclick="window.history.back()">
+            <i data-lucide="x"></i>
+        </div>
+
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-fill"></div>
+        </div>
+    </header>
+
+    <!-- Menú Lateral -->
+    <div id="drawer-overlay" class="drawer-overlay" onclick="toggleDrawer(false)"></div>
+    <aside id="drawer" class="drawer">
+        <div class="drawer-header">
+            <a href="index.html" class="back-hub-btn">
+                <i data-lucide="arrow-left" size="14"></i>
+                Volver a Roussel Hub
+            </a>
+            <h2>ROEN<span>.</span></h2>
+        </div>
+        
+        <div class="index-content">
+            <div class="chapter-group active" id="chapter-1-group">
+                <div class="chapter-trigger" onclick="toggleChapter(this)">
+                    <span>Capítulo 1</span>
+                    <i data-lucide="chevron-down" size="18"></i>
+                </div>
+                <div class="pages-list" id="index-pages-container">
+                    <!-- Páginas inyectadas por JS -->
+                </div>
+            </div>
+        </div>
     </aside>
 
-    <main id="main-content">
-        <header id="reader-meta">
-            <span class="meta-tag">Lectura Actual</span>
-            <span id="book-title">Editorial</span>
-            <h2 id="chapter-name">Iniciando...</h2>
-        </header>
-
-        <article id="content-area"></article>
-
-        <nav id="controls">
-            <button id="prev-btn" class="nav-btn" disabled>Anterior</button>
-            <button id="next-btn" class="nav-btn">Siguiente</button>
-        </nav>
+    <!-- Reader -->
+    <main class="reader-viewport" id="viewport">
+        <div class="content-container" id="content-parent">
+            <h2 class="chapter-title" id="page-title-ui">Cargando...</h2>
+            <div class="page-subtitle" id="page-subtitle-ui">Página 1</div>
+            <div id="reader-text" class="reader-text"></div>
+        </div>
     </main>
+
+    <!-- Footer Nav -->
+    <nav class="bottom-nav">
+        <button id="prev-btn" class="nav-icon" onclick="changePage(-1)">
+            <i data-lucide="chevron-left"></i>
+        </button>
+        
+        <div class="page-badge" id="page-counter">1 / 6</div>
+
+        <button id="next-btn" class="nav-btn-main" onclick="changePage(1)">
+            Siguiente
+            <i data-lucide="chevron-right" size="16"></i>
+        </button>
+    </nav>
 
     <script>
         const CONFIG = {
-            totalChapters: 1,
-            pagesPerChapter: 6, 
-            basePath: 'capitulos/capitulo1/pages/page',
+            pagesPerChapter: 6,
+            basePath: './capitulos/capitulo1/pages/page', 
             extension: '.txt'
         };
 
         const state = {
             currentPage: 1,
-            cache: new Map(),
             isRendering: false
         };
 
-        const dom = {
-            content: document.getElementById('content-area'),
-            bookTitle: document.getElementById('book-title'),
-            chapterName: document.getElementById('chapter-name'),
-            toc: document.getElementById('toc-list'),
-            prevBtn: document.getElementById('prev-btn'),
-            nextBtn: document.getElementById('next-btn'),
-            progress: document.getElementById('progress-bar'),
-            status: document.getElementById('status-msg'),
-            sidebar: document.getElementById('sidebar'),
-            menuBtn: document.getElementById('menu-toggle'),
-            overlay: document.getElementById('overlay'),
-            main: document.getElementById('main-content')
-        };
-
         function init() {
-            generateTOC();
-            setupInteractions();
+            lucide.createIcons();
+            generateIndex();
             loadPage(1);
         }
 
-        function generateTOC() {
-            dom.toc.innerHTML = '';
-            const group = document.createElement('div');
-            group.className = 'chapter-group active';
-            group.innerHTML = `
-                <div class="chapter-header" onclick="this.parentElement.classList.toggle('active')">
-                    <span>Capítulo 1</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </div>
-                <div class="chapter-pages"></div>
-            `;
-            const pagesContainer = group.querySelector('.chapter-pages');
+        function generateIndex() {
+            const container = document.getElementById('index-pages-container');
+            container.innerHTML = '';
             for (let i = 1; i <= CONFIG.pagesPerChapter; i++) {
-                const pageItem = document.createElement('div');
-                pageItem.className = 'page-item';
-                pageItem.innerHTML = `Página ${i}`;
-                pageItem.onclick = () => {
+                const item = document.createElement('div');
+                item.className = 'page-item';
+                item.innerHTML = `<i data-lucide="file-text" size="14"></i> Página ${i}`;
+                item.onclick = () => {
                     loadPage(i);
-                    if(window.innerWidth < 1200) toggleMenu(false);
+                    if(window.innerWidth < 1200) toggleDrawer(false);
                 };
-                pagesContainer.appendChild(pageItem);
+                container.appendChild(item);
             }
-            dom.toc.appendChild(group);
+            lucide.createIcons();
         }
 
-        function toggleMenu(show) {
-            dom.sidebar.classList.toggle('open', show);
-            dom.overlay.classList.toggle('active', show);
+        function toggleChapter(el) {
+            el.parentElement.classList.toggle('active');
         }
 
-        function setupInteractions() {
-            dom.menuBtn.onclick = () => toggleMenu(true);
-            dom.overlay.onclick = () => toggleMenu(false);
-            dom.prevBtn.onclick = () => loadPage(state.currentPage - 1);
-            dom.nextBtn.onclick = () => loadPage(state.currentPage + 1);
+        function toggleDrawer(show) {
+            document.getElementById('drawer').classList.toggle('open', show);
+            document.getElementById('drawer-overlay').classList.toggle('active', show);
         }
 
-        async function loadPage(pageNumber) {
-            if (pageNumber < 1 || pageNumber > CONFIG.pagesPerChapter || state.isRendering) return;
-            state.currentPage = pageNumber;
-            updateUI(pageNumber);
-
-            let rawText = '';
-            if (state.cache.has(pageNumber)) {
-                rawText = state.cache.get(pageNumber);
-            } else {
-                dom.status.style.display = 'block';
-                try {
-                    const response = await fetch(`${CONFIG.basePath}${pageNumber}${CONFIG.extension}`);
-                    if (!response.ok) throw new Error();
-                    rawText = await response.text();
-                    state.cache.set(pageNumber, rawText);
-                } catch (e) {
-                    dom.status.textContent = "Error de carga";
-                    setTimeout(() => dom.status.style.display = 'none', 2000);
-                    return;
-                }
-                dom.status.style.display = 'none';
-            }
-            renderText(rawText);
-        }
-
-        function renderText(text) {
+        async function loadPage(num) {
+            if (num < 1 || num > CONFIG.pagesPerChapter || state.isRendering) return;
+            
             state.isRendering = true;
-            dom.main.style.opacity = '0';
-            setTimeout(() => {
-                const titleMatch = text.match(/\[TITLE\]\s*(.*)/i);
-                const chapterMatch = text.match(/\[CHAPTER\]\s*(.*)/i);
-                let bodyText = text.replace(/\[TITLE\].*/i, '').replace(/\[CHAPTER\].*/i, '').replace(/\[PAGE\].*/i, '').trim();
+            const contentParent = document.getElementById('content-parent');
+            contentParent.classList.add('loading');
 
-                dom.bookTitle.textContent = titleMatch ? titleMatch[1] : 'ROEN';
-                dom.chapterName.textContent = chapterMatch ? chapterMatch[1] : `Página ${state.currentPage}`;
+            try {
+                const response = await fetch(`${CONFIG.basePath}${num}${CONFIG.extension}`);
+                if (!response.ok) throw new Error();
+                const text = await response.text();
                 
-                const paragraphs = bodyText.split(/\n\s*\n/);
-                dom.content.innerHTML = '';
-                paragraphs.forEach((p, i) => {
-                    if(!p.trim()) return;
-                    const pElem = document.createElement('p');
-                    pElem.textContent = p.trim();
-                    pElem.style.animationDelay = `${i * 0.08}s`;
-                    dom.content.appendChild(pElem);
-                });
+                setTimeout(() => {
+                    renderContent(text, num);
+                    state.currentPage = num;
+                    updateUI();
+                    contentParent.classList.remove('loading');
+                    document.getElementById('viewport').scrollTop = 0;
+                    state.isRendering = false;
+                }, 400);
 
-                dom.main.style.opacity = '1';
+            } catch (e) {
+                document.getElementById('page-title-ui').textContent = "Error al cargar";
+                contentParent.classList.remove('loading');
                 state.isRendering = false;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 350);
+            }
         }
 
-        function updateUI(page) {
-            dom.prevBtn.disabled = (page === 1);
-            dom.nextBtn.disabled = (page === CONFIG.pagesPerChapter);
+        function renderContent(text, num) {
+            // Extraer metadatos usando expresiones regulares
+            const chapterMatch = text.match(/\[CHAPTER\]\s*(.*)/i);
+            const pageMatch = text.match(/\[PAGE\]\s*(.*)/i);
             
-            // Lógica de progreso corregida para 6 páginas
-            const progress = (page / CONFIG.pagesPerChapter) * 100;
-            dom.progress.style.width = `${progress}%`;
+            // Limpiar el cuerpo del texto de etiquetas [CHAPTER] y [PAGE]
+            let body = text
+                .replace(/\[CHAPTER\].*/gi, '')
+                .replace(/\[PAGE\].*/gi, '')
+                .trim();
+
+            const chapterTitle = chapterMatch ? chapterMatch[1].trim() : `Capítulo ${num}`;
+            const pageLabel = pageMatch ? pageMatch[1].trim() : `Página ${num}`;
+
+            // Actualizar UI del Header y Reader
+            document.getElementById('ui-chapter-name').textContent = chapterTitle;
+            document.getElementById('page-title-ui').textContent = chapterTitle;
+            document.getElementById('page-subtitle-ui').textContent = pageLabel;
             
-            const items = dom.toc.querySelectorAll('.page-item');
+            const container = document.getElementById('reader-text');
+            container.innerHTML = '';
+            
+            // Renderizar párrafos
+            body.split(/\n\s*\n/).forEach((para, i) => {
+                if(!para.trim()) return;
+                const p = document.createElement('p');
+                p.textContent = para.trim();
+                p.style.animationDelay = `${i * 0.08}s`;
+                container.appendChild(p);
+            });
+        }
+
+        function updateUI() {
+            const page = state.currentPage;
+            const total = CONFIG.pagesPerChapter;
+            
+            document.getElementById('prev-btn').disabled = (page === 1);
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.innerHTML = page === total ? 'Finalizar <i data-lucide="check" size="16"></i>' : 'Siguiente <i data-lucide="chevron-right" size="16"></i>';
+            lucide.createIcons();
+
+            document.getElementById('page-counter').textContent = `${page} / ${total}`;
+            document.getElementById('progress-bar').style.width = `${(page/total)*100}%`;
+
+            const items = document.querySelectorAll('.page-item');
             items.forEach((item, idx) => {
                 item.classList.toggle('active', (idx + 1) === page);
             });
         }
 
-        window.addEventListener('DOMContentLoaded', init);
+        function changePage(delta) {
+            const target = state.currentPage + delta;
+            if(target >= 1 && target <= CONFIG.pagesPerChapter) {
+                loadPage(target);
+            } else if (target > CONFIG.pagesPerChapter) {
+                window.history.back();
+            }
+        }
+
+        window.onload = init;
     </script>
 </body>
-
 </html>
-
-
