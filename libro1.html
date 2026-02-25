@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ROEN Reader | Roussel Books</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-accent: #ffcc00; 
+            --deep-black: #080808;
+            --card-bg: #121212;
+            --text-main: #f0f0f0;
+            --text-dim: #a0a0a0;
+            --sidebar-width: 320px;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--deep-black);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- UI COMPONENTS --- */
+
+        /* Barra de progreso superior corregida */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: var(--neon-accent);
+            width: 0%;
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.6);
+        }
+
+        /* Botón Menú (Mobile) */
+        #menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 500;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            color: var(--neon-accent);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            transition: var(--transition-smooth);
+        }
+
+        /* Sidebar - Drawer */
+        #sidebar {
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 40px 1.5rem 2rem;
+            z-index: 400;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: var(--transition-smooth);
+            will-change: transform;
+        }
+
+        #sidebar.open {
+            transform: translateX(0);
+        }
+
+        /* Botón Volver al Inicio */
+        .back-home {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+            transition: 0.3s;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .back-home:hover {
+            color: var(--neon-accent);
+        }
+
+        .sidebar-title {
+            font-family: 'Playfair Display', serif;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .sidebar-title span {
+            color: var(--neon-accent);
+        }
+
+        /* Índice */
+        #toc-list {
+            list-style: none;
+            overflow-y: auto;
+            flex-grow: 1;
+            scrollbar-width: none;
+        }
+
+        #toc-list::-webkit-scrollbar { display: none; }
+
+        .chapter-group {
+            margin-bottom: 10px;
+        }
+
+        .chapter-header {
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition-smooth);
+            font-weight: 700;
+            color: var(--neon-accent);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .chapter-pages {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            padding-left: 10px;
+        }
+
+        .chapter-group.active .chapter-pages {
+            max-height: 500px;
+            margin-top: 10px;
+        }
+
+        .page-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-item.active {
+            background: rgba(255, 204, 0, 0.1);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* --- CONTENT AREA --- */
+        main {
+            min-height: 100vh;
+            padding: 100px 7% 120px;
+            max-width: 900px;
+            margin: 0 auto;
+            transition: opacity 0.4s ease;
+        }
+
+        #reader-meta {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .meta-tag {
+            display: inline-block;
+            background: var(--neon-accent);
+            color: black;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        #book-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        #chapter-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 8vw, 3.8rem);
+            color: white;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        #content-area {
+            font-size: clamp(1.15rem, 4.5vw, 1.3rem);
+            color: var(--text-dim);
+            text-align: justify;
+            hyphens: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        #content-area p {
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInParagraph 0.6s forwards;
+        }
+
+        @keyframes fadeInParagraph {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- CONTROLS --- */
+        #controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            z-index: 500;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 800;
+            border-radius: 12px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        .nav-btn:not(:disabled):hover {
+            color: var(--neon-accent);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.1;
+            cursor: not-allowed;
+        }
+
+        #status-msg {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 25px;
+            background: var(--neon-accent);
+            color: black;
+            font-weight: 900;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            border-radius: 50px;
+            z-index: 1000;
+            display: none;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 350;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (min-width: 1200px) {
+            #sidebar { transform: translateX(0); width: 340px; }
+            #menu-toggle, #overlay { display: none; }
+            main { margin-left: 340px; max-width: calc(100% - 340px); padding: 100px 12%; }
+            #progress-container { left: 340px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="status-msg">Cargando...</div>
+    <div id="progress-container"><div id="progress-bar"></div></div>
+    
+    <button id="menu-toggle">☰</button>
+    <div id="overlay"></div>
+
+    <aside id="sidebar">
+        <a href="index.html" class="back-home">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Volver a RousselBooks
+        </a>
+        <h1 class="sidebar-title">ROEN<span>.</span></h1>
+        <div id="toc-list"></div>
+    </aside>
+
+    <main id="main-content">
+        <header id="reader-meta">
+            <span class="meta-tag">Lectura Actual</span>
+            <span id="book-title">Editorial</span>
+            <h2 id="chapter-name">Iniciando...</h2>
+        </header>
+
+        <article id="content-area"></article>
+
+        <nav id="controls">
+            <button id="prev-btn" class="nav-btn" disabled>Anterior</button>
+            <button id="next-btn" class="nav-btn">Siguiente</button>
+        </nav>
+    </main>
+
+    <script>
+        const CONFIG = {
+            totalChapters: 1,
+            pagesPerChapter: 6, 
+            basePath: '/capitulos/capitulo1/pages/page',
+            extension: '.txt'
+        };
+
+        const state = {
+            currentPage: 1,
+            cache: new Map(),
+            isRendering: false
+        };
+
+        const dom = {
+            content: document.getElementById('content-area'),
+            bookTitle: document.getElementById('book-title'),
+            chapterName: document.getElementById('chapter-name'),
+            toc: document.getElementById('toc-list'),
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            progress: document.getElementById('progress-bar'),
+            status: document.getElementById('status-msg'),
+            sidebar: document.getElementById('sidebar'),
+            menuBtn: document.getElementById('menu-toggle'),
+            overlay: document.getElementById('overlay'),
+            main: document.getElementById('main-content')
+        };
+
+        function init() {
+            generateTOC();
+            setupInteractions();
+            loadPage(1);
+        }
+
+        function generateTOC() {
+            dom.toc.innerHTML = '';
+            const group = document.createElement('div');
+            group.className = 'chapter-group active';
+            group.innerHTML = `
+                <div class="chapter-header" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Capítulo 1</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="chapter-pages"></div>
+            `;
+            const pagesContainer = group.querySelector('.chapter-pages');
+            for (let i = 1; i <= CONFIG.pagesPerChapter; i++) {
+                const pageItem = document.createElement('div');
+                pageItem.className = 'page-item';
+                pageItem.innerHTML = `Página ${i}`;
+                pageItem.onclick = () => {
+                    loadPage(i);
+                    if(window.innerWidth < 1200) toggleMenu(false);
+                };
+                pagesContainer.appendChild(pageItem);
+            }
+            dom.toc.appendChild(group);
+        }
+
+        function toggleMenu(show) {
+            dom.sidebar.classList.toggle('open', show);
+            dom.overlay.classList.toggle('active', show);
+        }
+
+        function setupInteractions() {
+            dom.menuBtn.onclick = () => toggleMenu(true);
+            dom.overlay.onclick = () => toggleMenu(false);
+            dom.prevBtn.onclick = () => loadPage(state.currentPage - 1);
+            dom.nextBtn.onclick = () => loadPage(state.currentPage + 1);
+        }
+
+        async function loadPage(pageNumber) {
+            if (pageNumber < 1 || pageNumber > CONFIG.pagesPerChapter || state.isRendering) return;
+            state.currentPage = pageNumber;
+            updateUI(pageNumber);
+
+            let rawText = '';
+            if (state.cache.has(pageNumber)) {
+                rawText = state.cache.get(pageNumber);
+            } else {
+                dom.status.style.display = 'block';
+                try {
+                    const response = await fetch(`${CONFIG.basePath}${pageNumber}${CONFIG.extension}`);
+                    if (!response.ok) throw new Error();
+                    rawText = await response.text();
+                    state.cache.set(pageNumber, rawText);
+                } catch (e) {
+                    dom.status.textContent = "Error de carga";
+                    setTimeout(() => dom.status.style.display = 'none', 2000);
+                    return;
+                }
+                dom.status.style.display = 'none';
+            }
+            renderText(rawText);
+        }
+
+        function renderText(text) {
+            state.isRendering = true;
+            dom.main.style.opacity = '0';
+            setTimeout(() => {
+                const titleMatch = text.match(/\[TITLE\]\s*(.*)/i);
+                const chapterMatch = text.match(/\[CHAPTER\]\s*(.*)/i);
+                let bodyText = text.replace(/\[TITLE\].*/i, '').replace(/\[CHAPTER\].*/i, '').replace(/\[PAGE\].*/i, '').trim();
+
+                dom.bookTitle.textContent = titleMatch ? titleMatch[1] : 'ROEN';
+                dom.chapterName.textContent = chapterMatch ? chapterMatch[1] : `Página ${state.currentPage}`;
+                
+                const paragraphs = bodyText.split(/\n\s*\n/);
+                dom.content.innerHTML = '';
+                paragraphs.forEach((p, i) => {
+                    if(!p.trim()) return;
+                    const pElem = document.createElement('p');
+                    pElem.textContent = p.trim();
+                    pElem.style.animationDelay = `${i * 0.08}s`;
+                    dom.content.appendChild(pElem);
+                });
+
+                dom.main.style.opacity = '1';
+                state.isRendering = false;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 350);
+        }
+
+        function updateUI(page) {
+            dom.prevBtn.disabled = (page === 1);
+            dom.nextBtn.disabled = (page === CONFIG.pagesPerChapter);
+            
+            // Lógica de progreso corregida para 6 páginas
+            const progress = (page / CONFIG.pagesPerChapter) * 100;
+            dom.progress.style.width = `${progress}%`;
+            
+            const items = dom.toc.querySelectorAll('.page-item');
+            items.forEach((item, idx) => {
+                item.classList.toggle('active', (idx + 1) === page);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

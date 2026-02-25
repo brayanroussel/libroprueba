@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ROEN – Sinopsis | Roussel Books</title>
+    <style>
+        :root {
+            /* Amarillo neón tirando a naranja para máxima elegancia */
+            --neon-accent: #ffcc00; 
+            --deep-black: #080808;
+            --card-bg: #121212;
+            --text-gray: #a0a0a0;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--deep-black);
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        /* Fondo Decorativo */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% -20%, #ffcc0015 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header Estilo Roussel */
+        header {
+            padding: 60px 6% 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            background: var(--neon-accent);
+            color: black;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo {
+            font-size: clamp(2.8rem, 10vw, 5rem);
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            line-height: 0.9;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .logo span {
+            color: var(--neon-accent);
+            filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.5));
+        }
+
+        /* Contenido Principal */
+        main {
+            padding: 0 6% 80px;
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .section-header hr {
+            flex-grow: 1;
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, var(--neon-accent), transparent);
+            opacity: 0.3;
+        }
+
+        .genre-label {
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--neon-accent);
+            text-transform: uppercase;
+        }
+
+        /* Hero Image - Dinamismo Visual */
+        .hero-image-wrapper {
+            width: 100%;
+            height: 250px;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: -20px;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: slideUp 1s ease-out;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.5) brightness(0.6);
+            transition: var(--transition-smooth);
+        }
+
+        .hero-image-wrapper:hover .hero-img {
+            filter: grayscale(0) brightness(0.8);
+            transform: scale(1.05);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, var(--card-bg) 100%);
+        }
+
+        /* Contenedor de Sinopsis con Estética de Tarjeta Premium */
+        .synopsis-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: slideUp 1s ease-out 0.2s both;
+        }
+
+        .synopsis-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-accent), transparent);
+        }
+
+        .content-body {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .paragraph {
+            margin-bottom: 25px;
+            transition: var(--transition-smooth);
+        }
+
+        .paragraph:hover {
+            color: #ffffff;
+        }
+
+        .drop-cap {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--neon-accent);
+            float: left;
+            line-height: 1;
+            padding-right: 15px;
+            filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.3));
+        }
+
+        /* Botón Estilo Premium */
+        .action-area {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .btn-premium {
+            background: var(--neon-accent);
+            color: black;
+            border: none;
+            padding: 20px 45px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.2);
+        }
+
+        .btn-premium:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 204, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* Animaciones */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 40px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #444;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Loader */
+        .loader-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--neon-accent);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.4s ease;
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 40px 6% 20px; }
+            .synopsis-container { padding: 30px 20px; }
+            .content-body { font-size: 1rem; }
+            .hero-image-wrapper { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader" class="loader-bar"></div>
+
+    <header>
+        <span class="brand-tag">Sinopsis Exclusiva</span>
+        <h1 class="logo" id="mainLogo">ROEN<br><span>SINOPSIS</span></h1>
+    </header>
+
+    <main>
+        <div class="section-header">
+            <span class="genre-label">Drama psicológico romántico oscuro</span>
+            <hr>
+        </div>
+
+        <!-- Imagen Decorativa Optimizada -->
+        <div class="hero-image-wrapper">
+            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200&auto=format&fit=crop" alt="Atmósfera de ROEN" class="hero-img">
+            <div class="hero-overlay"></div>
+        </div>
+
+        <article class="synopsis-container">
+            <div class="content-body">
+                <p class="paragraph">
+                    <span class="drop-cap">R</span>oen nunca conoció el peso de un apellido ni el calor de un origen. Su historia comienza en el silencio gélido de un orfanato, un escenario donde la supervivencia no era una opción, sino una condena diaria. Entre sombras de abuso y el eco constante del desprecio ajeno, su único refugio fue Oscar, un faro de lealtad cuya partida marcó el fin de su infancia y el preludio de una catástrofe que borraría su pasado de la faz de la tierra.
+                </p>
+
+                <p class="paragraph">
+                    Tras emerger de las cenizas de una tragedia que sacudió los titulares internacionales, el destino lo condujo a los salones dorados de la familia Guzmán. En el seno de la alta sociedad colombiana, Roen encontró un hogar diseñado para sanar heridas, pero pronto descubrió que el lujo no es un antídoto contra los fantasmas internos. Bajo la superficie de una vida perfecta, creció un hombre de mirada analítica y alma blindada, convencido de que cada uno de sus logros es una máscara para ocultar una verdad que ni él mismo alcanza a comprender.
+                </p>
+
+                <p class="paragraph">
+                    La narrativa nos sumerge en el ascenso meteórico de Roen hacia la cumbre del entretenimiento mundial. A través de la música y el pulso vibrante de las plataformas digitales, el protagonista construye un imperio mientras lucha contra un vacío existencial que amenaza con devorarlo. Es el retrato de una mente brillante fragmentada por el dolor, un viaje desde la miseria más absoluta hasta las luces de neón del estrellato.
+                </p>
+
+                <p class="paragraph">
+                    En este universo de ambición y secretos, la biografía de Roen explora los límites de la resiliencia humana. Es una oda a la melancolía moderna, un drama donde el éxito es el escenario de una batalla psicológica constante. Entre la frialdad de su carácter y la intensidad de sus pasiones, Roen camina sobre la cuerda floja de una identidad construida sobre ruinas.
+                </p>
+            </div>
+        </article>
+
+        <div class="action-area">
+            <a href="javascript:void(0)" class="btn-premium" onclick="openBook('libro1.html')">Explorar Universo</a>
+        </div>
+    </main>
+
+    <footer>
+        DESIGNED BY ROUSSEL &bull; 2024
+    </footer>
+
+    <script>
+        function openBook(url) {
+            const loader = document.getElementById('loader');
+            loader.style.width = '100%';
+            
+            // Simulación de respuesta táctil
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(15);
+            }
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Parallax suave en el logo
+        document.addEventListener('mousemove', (e) => {
+            const logo = document.getElementById('mainLogo');
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            logo.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    </script>
+</body>
+</html>
