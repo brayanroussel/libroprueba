@@ -2,16 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ROEN – Sinopsis | Roussel Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ROEN - Sinopsis</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root {
-            /* Amarillo neón tirando a naranja para máxima elegancia */
-            --neon-accent: #ffcc00; 
-            --deep-black: #080808;
-            --card-bg: #121212;
-            --text-gray: #a0a0a0;
-            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --gold: #ffcc00;
+            --bg-black: #0a0a0a;
+            --card-gray: #121212;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --safe-top: env(safe-area-inset-top);
         }
 
         * {
@@ -22,217 +31,174 @@
         }
 
         body {
-            background-color: var(--deep-black);
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Fondo Decorativo */
-        body::before {
-            content: "";
+        /* App Bar Nativa */
+        .app-bar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% -20%, #ffcc0015 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Header Estilo Roussel */
-        header {
-            padding: 60px 6% 30px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .brand-tag {
-            display: inline-block;
-            background: var(--neon-accent);
-            color: black;
-            padding: 2px 10px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .logo {
-            font-size: clamp(2.8rem, 10vw, 5rem);
-            font-weight: 900;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: -3px;
-            line-height: 0.9;
-            animation: slideUp 0.8s ease-out;
-        }
-
-        .logo span {
-            color: var(--neon-accent);
-            filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.5));
-        }
-
-        /* Contenido Principal */
-        main {
-            padding: 0 6% 80px;
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-        }
-
-        .section-header {
+            right: 0;
+            height: calc(60px + var(--safe-top));
+            padding-top: var(--safe-top);
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 40px;
+            padding-inline: 20px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .section-header hr {
-            flex-grow: 1;
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, var(--neon-accent), transparent);
-            opacity: 0.3;
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            margin-right: 15px;
+            cursor: pointer;
         }
 
-        .genre-label {
+        .app-bar-title {
             font-weight: 800;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: var(--neon-accent);
+            font-size: 0.9rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
         }
 
-        /* Hero Image - Dinamismo Visual */
-        .hero-image-wrapper {
-            width: 100%;
-            height: 250px;
-            border-radius: 20px 20px 0 0;
-            overflow: hidden;
+        /* Hero Header */
+        .hero-section {
+            margin-top: calc(60px + var(--safe-top));
             position: relative;
-            margin-bottom: -20px;
-            z-index: 1;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: slideUp 1s ease-out;
+            width: 100%;
+            height: 40vh;
+            overflow: hidden;
         }
 
         .hero-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(0.5) brightness(0.6);
-            transition: var(--transition-smooth);
+            filter: brightness(0.6);
         }
 
-        .hero-image-wrapper:hover .hero-img {
-            filter: grayscale(0) brightness(0.8);
-            transform: scale(1.05);
-        }
-
-        .hero-overlay {
+        .hero-gradient {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, transparent 50%, var(--card-bg) 100%);
+            background: linear-gradient(to bottom, transparent 40%, var(--bg-black) 100%);
         }
 
-        /* Contenedor de Sinopsis con Estética de Tarjeta Premium */
-        .synopsis-container {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 40px;
+        /* Content Container */
+        .main-content {
+            padding: 0 24px 100px;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            animation: slideUp 1s ease-out 0.2s both;
+            z-index: 10;
+            margin-top: -60px;
         }
 
-        .synopsis-container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-accent), transparent);
+        .book-meta {
+            margin-bottom: 30px;
         }
 
-        .content-body {
-            color: var(--text-gray);
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto;
+        .title-main {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            line-height: 1;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .genre-tag {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        /* Texto de Sinopsis */
+        .synopsis-body {
+            background: var(--card-gray);
+            padding: 30px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         .paragraph {
-            margin-bottom: 25px;
-            transition: var(--transition-smooth);
-        }
-
-        .paragraph:hover {
-            color: #ffffff;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            font-weight: 400;
         }
 
         .drop-cap {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 900;
-            color: var(--neon-accent);
+            color: var(--gold);
             float: left;
             line-height: 1;
-            padding-right: 15px;
-            filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.3));
+            padding-right: 12px;
+            font-family: 'Playfair Display', serif;
         }
 
-        /* Botón Estilo Premium */
-        .action-area {
-            margin-top: 50px;
-            text-align: center;
+        /* Botón de Acción Flotante Estilo Android */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+            padding-inline: 24px;
         }
 
-        .btn-premium {
-            background: var(--neon-accent);
+        .btn-action {
+            background: var(--gold);
             color: black;
-            border: none;
-            padding: 20px 45px;
+            width: 100%;
+            max-width: 400px;
+            height: 60px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             font-size: 0.85rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            display: inline-block;
             text-decoration: none;
-            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(255, 204, 0, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        .btn-premium:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 204, 0, 0.4);
-            filter: brightness(1.1);
+        .btn-action:active {
+            transform: scale(0.96);
         }
 
-        /* Animaciones */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
+        /* Animación de entrada */
+        .fade-up {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Footer */
-        footer {
-            padding: 60px 40px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #444;
-            letter-spacing: 3px;
-            text-transform: uppercase;
         }
 
         /* Loader */
@@ -241,17 +207,10 @@
             top: 0;
             left: 0;
             height: 3px;
-            background: var(--neon-accent);
+            background: var(--gold);
             width: 0%;
-            z-index: 9999;
+            z-index: 2000;
             transition: width 0.4s ease;
-        }
-
-        @media (max-width: 768px) {
-            header { padding: 40px 6% 20px; }
-            .synopsis-container { padding: 30px 20px; }
-            .content-body { font-size: 1rem; }
-            .hero-image-wrapper { height: 180px; }
         }
     </style>
 </head>
@@ -259,74 +218,70 @@
 
     <div id="loader" class="loader-bar"></div>
 
-    <header>
-        <span class="brand-tag">Sinopsis Exclusiva</span>
-        <h1 class="logo" id="mainLogo">ROEN<br><span>SINOPSIS</span></h1>
-    </header>
+    <!-- Barra Superior -->
+    <div class="app-bar">
+        <div class="back-btn" onclick="goBack()">
+            <i data-lucide="chevron-left" color="white"></i>
+        </div>
+        <div class="app-bar-title">Detalles del Libro</div>
+    </div>
 
-    <main>
-        <div class="section-header">
-            <span class="genre-label">Drama psicológico romántico oscuro</span>
-            <hr>
+    <!-- Imagen de Cabecera -->
+    <div class="hero-section">
+        <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200&auto=format&fit=crop" alt="ROEN" class="hero-img">
+        <div class="hero-gradient"></div>
+    </div>
+
+    <!-- Contenido -->
+    <main class="main-content">
+        <div class="book-meta fade-up">
+            <span class="genre-tag">Drama Psicológico</span>
+            <h1 class="title-main">ROEN:<br>El Comienzo</h1>
         </div>
 
-        <!-- Imagen Decorativa Optimizada -->
-        <div class="hero-image-wrapper">
-            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200&auto=format&fit=crop" alt="Atmósfera de ROEN" class="hero-img">
-            <div class="hero-overlay"></div>
-        </div>
+        <article class="synopsis-body fade-up" style="animation-delay: 0.1s;">
+            <p class="paragraph">
+                <span class="drop-cap">R</span>oen nunca conoció el peso de un apellido ni el calor de un origen. Su historia comienza en el silencio gélido de un orfanato, un escenario donde la supervivencia no era una opción, sino una condena diaria. Su único refugio fue Oscar, un faro de lealtad cuya partida marcó el fin de su infancia.
+            </p>
 
-        <article class="synopsis-container">
-            <div class="content-body">
-                <p class="paragraph">
-                    <span class="drop-cap">R</span>oen nunca conoció el peso de un apellido ni el calor de un origen. Su historia comienza en el silencio gélido de un orfanato, un escenario donde la supervivencia no era una opción, sino una condena diaria. Entre sombras de abuso y el eco constante del desprecio ajeno, su único refugio fue Oscar, un faro de lealtad cuya partida marcó el fin de su infancia y el preludio de una catástrofe que borraría su pasado de la faz de la tierra.
-                </p>
+            <p class="paragraph">
+                Tras emerger de las cenizas de una tragedia, el destino lo condujo a los salones dorados de la familia Guzmán en Colombia. Encontró un hogar diseñado para sanar, pero pronto descubrió que el lujo no es un antídoto contra los fantasmas internos.
+            </p>
 
-                <p class="paragraph">
-                    Tras emerger de las cenizas de una tragedia que sacudió los titulares internacionales, el destino lo condujo a los salones dorados de la familia Guzmán. En el seno de la alta sociedad colombiana, Roen encontró un hogar diseñado para sanar heridas, pero pronto descubrió que el lujo no es un antídoto contra los fantasmas internos. Bajo la superficie de una vida perfecta, creció un hombre de mirada analítica y alma blindada, convencido de que cada uno de sus logros es una máscara para ocultar una verdad que ni él mismo alcanza a comprender.
-                </p>
-
-                <p class="paragraph">
-                    La narrativa nos sumerge en el ascenso meteórico de Roen hacia la cumbre del entretenimiento mundial. A través de la música y el pulso vibrante de las plataformas digitales, el protagonista construye un imperio mientras lucha contra un vacío existencial que amenaza con devorarlo. Es el retrato de una mente brillante fragmentada por el dolor, un viaje desde la miseria más absoluta hasta las luces de neón del estrellato.
-                </p>
-
-                <p class="paragraph">
-                    En este universo de ambición y secretos, la biografía de Roen explora los límites de la resiliencia humana. Es una oda a la melancolía moderna, un drama donde el éxito es el escenario de una batalla psicológica constante. Entre la frialdad de su carácter y la intensidad de sus pasiones, Roen camina sobre la cuerda floja de una identidad construida sobre ruinas.
-                </p>
-            </div>
+            <p class="paragraph">
+                La narrativa nos sumerge en su ascenso meteórico hacia la cumbre del entretenimiento mundial, construyendo un imperio mientras lucha contra un vacío existencial que amenaza con devorarlo. Una oda a la melancolía moderna construida sobre ruinas.
+            </p>
         </article>
-
-        <div class="action-area">
-            <a href="javascript:void(0)" class="btn-premium" onclick="openBook('libro1.html')">Explorar Universo</a>
-        </div>
     </main>
 
-    <footer>
-        DESIGNED BY ROUSSEL &bull; 2024
-    </footer>
+    <!-- Botón Flotante -->
+    <div class="fab-container">
+        <button class="btn-action" onclick="startReading()">
+            Explorar Universo
+        </button>
+    </div>
 
     <script>
-        function openBook(url) {
+        // Inicializar iconos
+        lucide.createIcons();
+
+        function goBack() {
+            if (window.navigator.vibrate) window.navigator.vibrate(8);
+            window.history.back();
+        }
+
+        function startReading() {
             const loader = document.getElementById('loader');
             loader.style.width = '100%';
             
-            // Simulación de respuesta táctil
-            if (window.navigator.vibrate) {
-                window.navigator.vibrate(15);
-            }
-
+            // Respuesta táctil nativa
+            if (window.navigator.vibrate) window.navigator.vibrate(20);
+            
+            // Navegación al archivo libro1.html tras la animación de carga
             setTimeout(() => {
-                window.location.href = url;
+                window.location.href = 'libro1.html';
             }, 500);
         }
-
-        // Parallax suave en el logo
-        document.addEventListener('mousemove', (e) => {
-            const logo = document.getElementById('mainLogo');
-            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
-            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
-            logo.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
     </script>
 </body>
 </html>
