@@ -2,426 +2,317 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biografía Roen - Lector Editorial</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ROUSSEL BOOKS | Digital Library</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-yellow: #ccff00;
-            --dark-bg: #0a0a0a;
-            --glass-bg: rgba(20, 20, 20, 0.8);
+            --neon-accent: #ffcc00; 
+            --deep-black: #080808;
+            --card-bg: #121212;
+            --text-main: #f0f0f0;
+            --text-dim: #a0a0a0;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        body {
-            background-color: var(--dark-bg);
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .neon-text {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px rgba(204, 255, 0, 0.5), 0 0 20px rgba(204, 255, 0, 0.3);
+        body {
+            background-color: var(--deep-black);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .glass-header {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(204, 255, 0, 0.1);
-        }
-
-        .reading-content {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            max-width: 650px;
-            margin: 0 auto;
-            transition: opacity 0.4s ease;
-        }
-
-        .sidebar {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar.closed {
-            transform: translateX(-100%);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--neon-yellow);
-            border-radius: 10px;
-        }
-
-        .btn-nav {
-            background: transparent;
-            border: 2px solid var(--neon-yellow);
-            color: var(--neon-yellow);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-
-        .btn-nav:active {
-            background: var(--neon-yellow);
-            color: black;
-            box-shadow: 0 0 20px var(--neon-yellow);
-        }
-
-        .chapter-title {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-        }
-
-        .progress-bar {
-            height: 2px;
-            background: var(--neon-yellow);
+        /* Fondo Decorativo */
+        body::before {
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 100;
-            transition: width 0.1s ease;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% -20%, #ffcc000a 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .page-container {
-            display: none;
+        /* Header Estilo Roussel */
+        header {
+            padding: 60px 8% 40px;
+            position: relative;
+            z-index: 10;
         }
 
-        .page-active {
-            display: block;
+        .brand-tag {
+            display: inline-block;
+            background: var(--neon-accent);
+            color: black;
+            padding: 3px 10px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .drop-cap::first-letter {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--neon-yellow);
-            float: left;
-            line-height: 1;
-            padding-right: 8px;
+        .logo {
             font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 12vw, 5.5rem);
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            line-height: 0.85;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .logo span {
+            color: var(--neon-accent);
+        }
+
+        /* Main Content */
+        main {
+            padding: 20px 8% 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .section-header span {
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .section-header hr {
+            flex-grow: 1;
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 204, 0, 0.4), transparent);
+        }
+
+        /* Grid de Libros */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        @media (min-width: 1024px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 50px;
+            }
+        }
+
+        /* Tarjeta de Libro Premium */
+        .book-card {
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            aspect-ratio: 2/3.1;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+            z-index: 2;
+            transition: 0.4s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 204, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255, 204, 0, 0.05);
+        }
+
+        .img-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .book-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .book-card:hover .book-img {
+            transform: scale(1.08);
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px;
+            z-index: 3;
+        }
+
+        .book-meta {
+            font-size: 0.65rem;
+            color: var(--neon-accent);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .tap-label {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 4;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 40px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #2a2a2a;
+            letter-spacing: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* Animaciones */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Loader */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--neon-accent);
+            width: 0%;
+            z-index: 10000;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px var(--neon-accent);
         }
     </style>
 </head>
 <body>
 
-    <!-- Progress Bar -->
-    <div id="progress" class="progress-bar" style="width: 0%"></div>
+    <div id="loader" class="page-loader"></div>
 
-    <!-- Header -->
-    <header class="glass-header fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center">
-        <button id="menu-toggle" class="p-2 text-neon-yellow">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
-        <h1 class="text-sm font-bold uppercase tracking-widest neon-text">Biografía Roen</h1>
-        <div class="w-8"></div>
+    <header>
+        <span class="brand-tag">Exclusivo Roussel</span>
+        <h1 class="logo">ROUSSEL<br>BOOKS<span>.</span></h1>
     </header>
 
-    <!-- Sidebar / Indice -->
-    <aside id="sidebar" class="sidebar closed fixed top-0 left-0 h-full w-64 glass-header z-[60] p-8">
-        <button id="close-menu" class="absolute top-4 right-4 text-neon-yellow">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-        <nav class="mt-12">
-            <h2 class="text-neon-yellow text-xs uppercase tracking-tighter mb-6 opacity-50">Índice</h2>
-            <ul class="space-y-4">
-                <li><button onclick="goToPage(1)" class="text-neon-yellow font-bold block text-left w-full hover:translate-x-2 transition-transform">Capítulo I - Pág 1</button></li>
-                <li><button onclick="goToPage(2)" class="text-neon-yellow font-bold block text-left w-full hover:translate-x-2 transition-transform">Capítulo I - Pág 2</button></li>
-                <li><button onclick="goToPage(3)" class="text-neon-yellow font-bold block text-left w-full hover:translate-x-2 transition-transform">Capítulo I - Pág 3</button></li>
-                <li><button onclick="goToPage(4)" class="text-neon-yellow font-bold block text-left w-full hover:translate-x-2 transition-transform">Capítulo I - Pág 4</button></li>
-                <li><button onclick="goToPage(5)" class="text-neon-yellow font-bold block text-left w-full hover:translate-x-2 transition-transform">Capítulo I - Pág 5</button></li>
-                <li><button onclick="goToPage(6)" class="text-neon-yellow font-bold block text-left w-full hover:translate-x-2 transition-transform">Capítulo I - Pág 6</button></li>
-                <li><span class="text-gray-500 block opacity-50">Capítulo II (Próximamente)</span></li>
-            </ul>
-        </nav>
-    </aside>
+    <main>
+        <div class="section-header">
+            <span>Colección Digital</span>
+            <hr>
+        </div>
 
-    <!-- Main Reading Area -->
-    <main class="pt-24 pb-12 px-6">
-        
-        <!-- PÁGINA 1 -->
-        <article id="page1" class="page-container page-active reading-content">
-            <div class="mb-12 text-center">
-                <span class="text-neon-yellow text-xs tracking-[0.3em] uppercase">Página 1</span>
-                <h2 class="chapter-title text-4xl md:text-5xl mt-2 mb-4">Capítulo I</h2>
-                <div class="h-1 w-12 bg-neon-yellow mx-auto opacity-50"></div>
+        <div class="grid-container">
+            <!-- LIBRO 1: BIOGRAFÍA ROEN -->
+            <div class="book-card" onclick="navigateTo('sinopsislibro1.html')">
+                <div class="tap-label">Destacado</div>
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800&auto=format&fit=crop" alt="ROEN Cover" class="book-img">
+                </div>
+                <div class="card-content">
+                    <p class="book-meta">Biografía • Vol. I</p>
+                    <h2 class="book-title">ROEN: El Comienzo de Todo</h2>
+                </div>
             </div>
 
-            <div class="space-y-6 text-gray-300 font-light">
-                <p class="drop-cap">Roen aparece en el orfanato sin haber llegado. No hay memoria de pasos que lo conduzcan hasta allí, ni manos que lo depositen con cuidado o descuido, ni una puerta cerrándose a su espalda como signo de abandono. No existe un recuerdo anterior que lo sostenga. Su conciencia no tiene prólogo. Solo hay un presente inmóvil, suspendido como polvo en el aire espeso de una habitación húmeda.</p>
-                <p>Tiene cuatro años. Y está de pie frente al espejo del baño. La luz amarillenta del techo parpadea con una insistencia fatigada, como si el edificio respirara con dificultad. Las paredes, cubiertas por azulejos antiguos, guardan grietas finas donde la humedad ha dibujado mapas silenciosos. El suelo está frío. Demasiado frío para unos pies descalzos que todavía no entienden el mundo.</p>
-                <p>Roen no sabe que ese lugar es un orfanato. No conoce la palabra. No conoce su significado. No sabe que existen sitios destinados a los que no fueron reclamados. Para él, el lugar no tiene nombre. Es simplemente el sitio donde está.</p>
-                <p>El espejo es más alto que su cuerpo pequeño. La superficie, manchada por el tiempo, le devuelve una imagen ligeramente distorsionada. Su reflejo parece temblar con la luz, como si no estuviera del todo fijado a la realidad.</p>
-                <p>Roen observa. No sabe que ese rostro es suyo. No sabe cómo llamarlo. No sabe quién es. Solo sabe que lo está mirando. Alza una mano con lentitud, como si temiera alterar algo sagrado. El niño del espejo levanta la suya. Durante una fracción mínima siente el vértigo de que el reflejo no responda.</p>
-                <p>¿Y si el otro no fuera él? Sus ojos son grandes, oscuros, atentos de una manera impropia para su edad. No contienen palabras, pero sí preguntas. Hay en su mirada una melancolía temprana, como si hubiera heredado una tristeza que no recuerda haber vivido.</p>
-                <p>No llora. No llama a nadie. No busca consuelo. Permanece inmóvil. Respira. El grifo mal cerrado deja caer una gota intermitente que resuena en el lavabo. Cada sonido se expande en el silencio como una campanada diminuta. El eco le devuelve su propia presencia. Está allí. Eso es innegable.</p>
-                <p>Se inclina apenas hacia adelante. Sus manos pequeñas se apoyan sobre el borde del lavabo. La porcelana está helada. El contacto lo estremece, pero no se aparta. Porque en ese instante algo sucede. Algo invisible. No es memoria. No es comprensión. Es conciencia. Por primera vez, Roen advierte que existe. No como se advierte un juguete o una pared. Sino como se advierte el propio latido.</p>
-                <p>El niño del espejo lo contempla con la misma intensidad. Sus facciones aún no han decidido qué historia contarán cuando crezcan. El cabello cae desordenado sobre su frente. Su figura es frágil, pero no débil. Hay en él una quietud extraña, casi solemne.</p>
-                <p>La ventana alta del baño deja entrar un fragmento de noche. No se ven estrellas, solo una oscuridad densa. El mundo exterior es una conjetura. El interior, en cambio, es concreto: humedad, luz temblorosa, olor a jabón gastado.</p>
-                <p>Roen entreabre los labios. No sale sonido. Quizá intenta pronunciar algo. Tal vez un nombre que todavía no conoce. Tal vez una pregunta sin forma. Si deja de mirarse, ¿seguirá siendo? La duda no tiene palabras, pero lo atraviesa. Parpadea. El reflejo también. Ese sincronismo mínimo lo tranquiliza.</p>
-                <p>Entre ambos —el niño y su imagen— se establece un pacto mudo. No saben de dónde vienen. No saben por qué están allí. Pero comparten la certeza de la presencia.</p>
-                <p>Roen permanece frente al espejo como si estuviera ante el umbral de algo vasto. El tiempo parece dilatarse, estirarse como una tela invisible que nadie sostiene. Afuera, más allá de los muros descascarados, el mundo continúa su marcha indiferente. Pero dentro de ese baño pequeño, bajo una luz moribunda, acontece un nacimiento que no figura en ningún registro.</p>
-                <p>No es el nacimiento del cuerpo. Es el nacimiento del yo. Un niño de cuatro años descubre que está vivo no por el dolor, ni por la alegría, ni por el llamado de una voz amorosa, sino por la abrumadora evidencia de verse a sí mismo. En el cristal manchado, su existencia se confirma. Y en esa confirmación silenciosa, bajo el aire melancólico y extraño del edificio cansado, comienza su historia.</p>
+            <!-- LIBRO 2: POEMAS DE LA NOCHE INFINITA -->
+            <div class="book-card" onclick="navigateTo('sinopsislibro2.html')">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=800&auto=format&fit=crop" alt="Night Poems Cover" class="book-img">
+                </div>
+                <div class="card-content">
+                    <p class="book-meta">Antología • Poesía</p>
+                    <h2 class="book-title">Poemas de la Noche Infinita</h2>
+                </div>
             </div>
-
-            <div class="mt-20 flex justify-center pb-20">
-                <button onclick="goToPage(2)" class="btn-nav px-10 py-4 rounded-sm flex items-center space-x-4">
-                    <span>Siguiente Página</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </article>
-
-        <!-- PÁGINA 2 -->
-        <article id="page2" class="page-container reading-content">
-            <div class="mb-12 text-center">
-                <span class="text-neon-yellow text-xs tracking-[0.3em] uppercase">Página 2</span>
-                <h2 class="chapter-title text-4xl md:text-5xl mt-2 mb-4">Capítulo I</h2>
-                <div class="h-1 w-12 bg-neon-yellow mx-auto opacity-50"></div>
-            </div>
-
-            <div class="space-y-6 text-gray-300 font-light">
-                <p>El sonido llega antes que la presencia. Unos pasos avanzan por el pasillo con la cadencia de quien conoce cada tabla del suelo, cada crujido, cada sombra. No son pasos amenazantes, pero tampoco ligeros. Son pasos que pertenecen a la noche.</p>
-                <p>Roen continúa frente al espejo unos segundos más, como si necesitara memorizar su propio rostro antes de abandonarlo. La bombilla vuelve a parpadear y, por un instante, su reflejo se fragmenta en luz y sombra.</p>
-                <p>La puerta se abre con un leve quejido. —Roen —dice una voz, baja pero firme—. Es hora de dormir. Es Anahlyn. Permanece de pie en el umbral, sosteniendo la puerta con una mano. La luz del pasillo dibuja un contorno tenue alrededor de su figura. Lleva el uniforme sencillo del orfanato: tela gris, mangas remangadas, un delantal que conserva la huella de incontables jornadas. Su cabello está recogido sin cuidado estético, solo práctico. En sus ojos hay cansancio, pero no dureza.</p>
-                <p>Roen la observa como si intentara descifrarla. No sabe exactamente qué es ella. No sabe cuál es su papel en el mundo. Pero reconoce algo en su voz: una temperatura distinta al frío del edificio.</p>
-                <p>Anahlyn se aproxima y se arrodilla frente a él. Ese gesto —bajar hasta su altura— tiene algo de reverencia invisible. —Es muy tarde —susurra—. Todos los demás ya están en sus camas.</p>
-                <p>—¿Por qué soy tan feo? —pregunta de pronto. Anahlyn parpadea lentamente. Durante una fracción de segundo, el mundo parece detenerse en su pecho. —¿Quién te dijo eso? —Yo. No hay desafío en su tono. Solo sinceridad.</p>
-                <p>Anahlyn acerca su mano y aparta con delicadeza el cabello que cae sobre la frente del niño. Sus dedos son cálidos. —No eres feo —responde con una convicción tranquila—. Eres un niño bonito. Muy bonito.</p>
-                <p>—Me siento triste. —¿Por qué? La pregunta no exige explicación; la sostiene. Roen mira el suelo, como si las baldosas pudieran ofrecerle palabras. —Quiero el juguete de Frank. Anahlyn sonríe apenas. —Ese juguete es suyo —dice con suavidad—. Cada niño tiene algo que es solo para él. Tú también tendrás lo tuyo. —¿Cuándo? —Pronto.</p>
-                <p>Anahlyn lo toma en brazos. Al principio el cuerpo del niño se tensa, rígido por la costumbre de no ser levantado. Luego, poco a poco, cede. Apoya la cabeza contra el hombro de ella. Escucha el latido bajo la tela. Ese sonido es distinto al goteo del grifo. Es un sonido vivo.</p>
-                <p>Salen del baño. El pasillo se extiende largo y estrecho. Anahlyn camina despacio. Roen observa el techo, las grietas, las sombras que se deslizán como pensamientos oscuros. —¿Por qué estoy aquí? —pregunta de repente. La pregunta es apenas un susurro. —Porque aquí te cuidamos —responde Anahlyn.</p>
-                <p>Llegan al dormitorio. Filas de camas pequeñas se alinean con una precisión casi militar. Anahlyn deposita a Roen en su cama. Le acomoda la manta. Apaga la luz. La oscuridad cae con obediencia. Desde su almohada, Roen mira la ventana alta. Las rejas dibujan líneas rectas contra el fragmento de noche visible. El edificio no parece un hogar. Parece una estructura que retiene.</p>
-                <p>Anahlyn permanece unos segundos junto a la cama. —Duerme —susurra. Roen la mira. —¿Te vas? —Solo a mi oficina. Estoy cerca. Ella se inclina y besa su frente. El gesto es breve. Pero suficiente para que el niño cierre los ojos por un instante. Cuando vuelve a abrirlos, la habitación ya está completamente en silencio. No duerme. Escucha la respiración de los otros niños. Escucha el viento. Y en medio de esa oscuridad, la imagen del espejo regresa.</p>
-            </div>
-
-            <div class="mt-20 flex justify-between pb-20">
-                <button onclick="goToPage(1)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Anterior</span>
-                </button>
-                <button onclick="goToPage(3)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <span>Siguiente</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </article>
-
-        <!-- PÁGINA 3 -->
-        <article id="page3" class="page-container reading-content">
-            <div class="mb-12 text-center">
-                <span class="text-neon-yellow text-xs tracking-[0.3em] uppercase">Página 3</span>
-                <h2 class="chapter-title text-4xl md:text-5xl mt-2 mb-4">Capítulo I</h2>
-                <div class="h-1 w-12 bg-neon-yellow mx-auto opacity-50"></div>
-            </div>
-
-            <div class="space-y-6 text-gray-300 font-light">
-                <p>La noche no concede el descanso de manera inmediata ni misericordiosa. Roen permanece despierto, con los ojos abiertos y fijos en la pequeña franja de oscuridad que la ventana permite observar. El sueño no llega con la naturalidad que alcanza a otros niños; se mantiene distante, como si también dudara de acercarse a él.</p>
-                <p>El dormitorio respira en murmullos casi imperceptibles. Algunas camas crujen cuando un niño se mueve entre las sábanas. Un suspiro se escapa en la penumbra. Un balbuceo incomprensible se pierde en el aire cargado de tela húmeda, madera envejecida y jabón barato. La quietud del lugar no es una quietud nacida del sosiego, sino una quietud aprendida, impuesta por la costumbre y el cansancio.</p>
-                <p>Roen gira apenas la cabeza. Desde su cama puede distinguir las siluetas de los otros niños alineadas como si la vida hubiese sido ordenada en filas para evitar que el desorden de existir se desborde hacia los pasillos. Anahlyn, aun ausente, parece ser distinta de todos los demás adultos del edificio.</p>
-                <p>Roen no sabe explicar esa certeza. No posee aún el lenguaje para nombrarla, pero la siente en la temperatura de su memoria emocional. Ella no camina como los otros cuidadores. No observa con la misma dureza seca que a veces cae sobre los niños como una lluvia silenciosa y fría. No habla con el tono impaciente que convierte las órdenes en pequeñas formas de distancia humana.</p>
-                <p>El resto del personal del orfanato —hombres y mujeres de rostros tensos, manos endurecidas por el trabajo y voces que rara vez acarician el sonido— se mueve por el edificio con una severidad que no necesita gritos para existir. Hay en ellos algo marchito, como si la ternura hubiera sido retirada de sus cuerpos mucho antes de que Roen naciera.</p>
-                <p>El viento mueve las copas de los árboles del patio y produce un sonido que se parece al suspiro de algo grande que duerme afuera del edificio. A través de la ventana, Roen distingue el reflejo pálido de la luna sobre los charcos de lodo que dejó la lluvia reciente. El patio se asemeja a un terreno abandonado donde la tierra y el agua permanecen mezcladas en un silencio pesado. No hay flores. No hay colores vivos. Solo barro.</p>
-                <p>Se pregunta, con la lentitud característica de su pensamiento infantil, si el mundo exterior será igual. ¿Será todo así? ¿Todos los niños del mundo crecerán dentro de edificios fríos, con camas alineadas y luces que se apagan al mismo horario como si la noche también estuviera administrada por alguien? La mente de Roen intenta construir una imagen distinta, pero no posee suficientes recuerdos para hacerlo.</p>
-                <p>Anahlyn es adulta. Ella camina con seguridad sobre los pasillos. Ella conoce los nombres de las cosas. ¿También habrá sido niña en un sitio como este? La pregunta se instala en su pecho con la paciencia de una piedra que lentamente aprende a pesar. Si crecer significa volverse como algunos de los otros cuidadores, entonces crecer no se siente como una promesa, sino como una transformación incierta.</p>
-                <p>Roen se incorpora lentamente en la cama. Necesita ver a Anahlyn. No por miedo, sino porque su mente pequeña no puede sostener sola el peso de las preguntas que han comenzado a florecer dentro de él. Desliza las piernas fuera de la cama. El suelo está frío, pero Roen no emite sonido alguno. Avanza entre las filas de camas cuidando que las tablas de madera no protesten con su crujido nocturno.</p>
-                <p>El pasillo lo recibe con una penumbra espesa y silenciosa. Roen camina pegado a la pared, como si la proximidad al muro pudiera protegerlo. A lo lejos se oye el sonido metálico de una llave chocando suavemente contra algo. Se detiene de inmediato. Un guardia recorre la zona. Roen se esconde detrás de una columna, conteniendo la respiración.</p>
-                <p>El guardia pasa sin notar al niño. El pasillo que conduce a la oficina de Anahlyn parece más largo de lo que recordaba. Roen no sabe exactamente qué dirá cuando llegue. No sabe cómo expresar lo que está creciendo dentro de su pecho como una semilla inquieta. Pero sabe que necesita acercarse a la única presencia del edificio que no le produce temor.</p>
-                <p>Avanza. Pequeño. Descalzo. Con la determinación silenciosa de quien todavía no entiende el mundo, pero ya ha comenzado a cuestionar su forma de existir dentro de él.</p>
-            </div>
-
-            <div class="mt-20 flex justify-between pb-20">
-                <button onclick="goToPage(2)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Anterior</span>
-                </button>
-                <button onclick="goToPage(4)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <span>Siguiente</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </article>
-
-        <!-- PÁGINA 4 -->
-        <article id="page4" class="page-container reading-content">
-            <div class="mb-12 text-center">
-                <span class="text-neon-yellow text-xs tracking-[0.3em] uppercase">Página 4</span>
-                <h2 class="chapter-title text-4xl md:text-5xl mt-2 mb-4">Capítulo I</h2>
-                <div class="h-1 w-12 bg-neon-yellow mx-auto opacity-50"></div>
-            </div>
-
-            <div class="space-y-6 text-gray-300 font-light">
-                <p>Roen no llega a la oficina de Anahlyn de inmediato. El camino se interrumpe por un accidente silencioso que nace de la torpeza infantil y de la noche que parece volver más pesados los objetos. Mientras avanzaba por el pasillo, su pie pequeño tropieza con el borde de un basurero metálico olvidado contra la pared.</p>
-                
-                <p>No hay intención en el movimiento, solo la fragilidad natural de un cuerpo de cuatro años que todavía no domina la geometría del espacio oscuro. El ruido del metal golpeando el suelo se expande con violencia desproporcionada en el silencio nocturno. El basurero cae. El sonido retumba entre las paredes como si hubiese despertado algo dormido dentro del edificio.</p>
-
-                <p>Roen se queda inmóvil. Durante un segundo siente que el tiempo se ha detenido. El corazón late con una fuerza que él no sabe nombrar, un golpe rítmico contra el interior de su pecho pequeño. No tiene tiempo de levantar el objeto. Una linterna se enciende de inmediato. La luz corta la oscuridad del pasillo como un cuchillo de vigilancia.</p>
-
-                <p>—¿Quién anda ahí? —dice una voz masculina, áspera, cargada de autoridad nocturna. Es el guardia. Roen no responde. Su cuerpo se tensa como si la palabra pudiera delatarlo. El hombre se aproxima con pasos pesados. El haz de la linterna se mueve erráticamente sobre las paredes, revelando la textura descascarada de la pintura.</p>
-
-                <p>El guardia extiende la mano y sujeta el brazo de Roen con firmeza. No hay brutalidad exagerada, pero tampoco suavidad. Hay la dureza de quien cree estar cumpliendo una función necesaria. —Te llevaré al cuarto de castigo —dice el hombre—. Los niños no deambulan de noche.</p>
-
-                <p>Roen no entiende completamente el concepto de castigo, pero percibe la palabra como una forma de sombra que se acerca a su cuerpo. En ese momento aparece Anahlyn. Su voz se escucha antes que su figura. —Déjalo.</p>
-
-                <p>El tono no es alto, pero contiene una autoridad tranquila que detiene el movimiento del guardia. La mujer camina desde el extremo del pasillo con paso seguro. —Lo mandé a dormir —añade—. Iba de regreso a la cama, ¿verdad, Roen? Su mirada se posa suavemente sobre el niño. Roen asiente con un movimiento mínimo de cabeza. —Sí —dice.</p>
-
-                <p>La mentira nace con la simplicidad de la necesidad de protección. Anahlyn toma a Roen del brazo del guardia con un gesto que no es violento, pero sí definitivo, como si estuviera reclamando algo que pertenece al espacio de su responsabilidad emocional. El guardia observa un segundo más y luego se retira, llevándose la linterna y su sombra pesada.</p>
-
-                <p>El silencio regresa al pasillo. Anahlyn baja la mirada hacia Roen. —¿Ibas a la cama, verdad? Roen responde: —Sí. La palabra suena pequeña, frágil, pero convincente. Anahlyn suspira apenas, un sonido casi invisible que mezcla preocupación y ternura contenida.</p>
-
-                <p>Lo toma en brazos. El gesto es natural, como si el cuerpo de Roen hubiese sido diseñado para encontrar reposo sobre el pecho de ella. Roen siente el calor humano que se filtra a través de la tela del uniforme sencillo de Anahlyn. Ese calor es diferente al frío del suelo, diferente a la madera del pasillo, diferente al aire nocturno del edificio. Es un calor que no amenaza. No ordena. No castiga. Es un calor que sostiene.</p>
-
-                <p>Roen apoya la cabeza sobre el hombro de la mujer. Escucha el latido de su corazón. Ese sonido es distinto al goteo del grifo, distinto al crujido de las tablas, distinto al eco del orfanato. Es un sonido vivo, humano, continuo. —No podía dormir —murmura Roen después de unos segundos.</p>
-
-                <p>—¿Quieres que te cuente un cuento? —pregunta Anahlyn. Roen asiente. La mujer comienza a caminar lentamente hacia el dormitorio mientras su voz se prepara para la historia que aún no ha decidido narrar. La noche continúa afuera, vasta y silenciosa, como un océano que existe más allá de las paredes del lugar donde un niño de cuatro años comienza a comprender, sin palabras, la diferencia entre el miedo y la ternura.</p>
-            </div>
-
-            <div class="mt-20 flex justify-between pb-20">
-                <button onclick="goToPage(3)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Anterior</span>
-                </button>
-                <button onclick="goToPage(5)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <span>Siguiente</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </article>
-
-        <!-- PÁGINA 5 -->
-        <article id="page5" class="page-container reading-content">
-            <div class="mb-12 text-center">
-                <span class="text-neon-yellow text-xs tracking-[0.3em] uppercase">Página 5</span>
-                <h2 class="chapter-title text-4xl md:text-5xl mt-2 mb-4">Capítulo I</h2>
-                <div class="h-1 w-12 bg-neon-yellow mx-auto opacity-50"></div>
-            </div>
-
-            <div class="space-y-6 text-gray-300 font-light">
-                <p>La oficina de Anahlyn está en silencio cuando Roen comienza a formular las preguntas que habían permanecido creciendo dentro de su pecho pequeño como semillas que no conocen todavía el suelo donde deberán germinar.</p>
-                <p>La mujer lo ha sentado suavemente sobre una silla cercana antes de comenzar la conversación. La noche continúa pesando sobre el edificio, aunque dentro de la oficina la iluminación tenue crea un pequeño espacio de calma artificial, un refugio frágil contra la vastedad oscura que se extiende fuera de esas paredes.</p>
-                <p>Roen observa a Anahlyn con la atención silenciosa de quien intenta comprender un lenguaje que todavía no domina. Hay algo en su mente que no puede permanecer guardado más tiempo. La pregunta aparece primero como una inquietud difusa, luego como una forma casi concreta dentro de su pensamiento infantil.</p>
-                <p>—Anahlyn… —dice con voz baja—. La mujer lo mira con paciencia. — ¿Qué es… mamá y papá?</p>
-                <p>El silencio que sigue no es vacío; es un silencio denso, pesado, consciente de la fragilidad de la respuesta que está por nacer. El corazón de Anahlyn se contrae levemente, un movimiento casi imperceptible bajo el peso de una ternura que sabe que cualquier explicación será imperfecta. Ella intenta encontrar palabras que no hieran, que no destruyan la inocencia que todavía habita en los ojos de Roen.</p>
-                <p>—Mamá y papá… —dice lentamente— son un hombre y una mujer que decidieron traer a un niño a la vida.</p>
-                <p>Roen procesa la información con la lentitud natural del pensamiento que todavía no ha aprendido las complejidades del mundo adulto. Permanece en silencio durante varios segundos, mirando sus propias manos pequeñas apoyadas sobre sus rodillas. —¿Qué son… un hombre y una mujer? —pregunta.</p>
-                <p>La pregunta cae dentro del pecho de Anahlyn como una hoja que desciende lentamente al agua. Su corazón se derrite un poco más, porque sabe que cada respuesta abre otra puerta de ignorancia infantil que deberá ser explicada con cuidado. —Un hombre y una mujer son personas adultas —responde—. Personas que, cuando se aman o desean tener un hijo, pueden traerlo al mundo.</p>
-                <p>Roen se queda pensando. El concepto de amor todavía no tiene forma definida dentro de su mente, pero reconoce que la palabra existe como una promesa vaga de calidez. —¿Y… dónde están mis papás? —pregunta Roen después de un instante que parece demasiado largo para un niño.</p>
-                <p>Anahlyn siente el peso de esa pregunta como una verdad que no puede pronunciarse sin romper algo frágil dentro de él. Decide mentir con ternura, porque la crudeza de la verdad no pertenece todavía a ese cuerpo pequeño que la observa con ojos demasiado atentos. —Ellos… te dejaron aquí —dice suavemente—. Pero ya volverán por ti.</p>
-                <p>La frase no nace como engaño cruel, sino como protección emocional improvisada frente a una realidad que Roen aún no tiene la madurez de sostener. Roen asiente lentamente. No hay tristeza visible en su rostro, solo una reflexión silenciosa que se instala dentro de su mente como un nuevo enigma. No sabe si debe esperar. No sabe cuánto tiempo significa “volverán”. No sabe qué forma tiene el regreso de alguien que se ha ido.</p>
-                <p>Anahlyn rompe la tensión con un gesto ligero. Le hace cosquillas suavemente en el costado. Roen reacciona con un movimiento mínimo, una mezcla de sorpresa y pequeña risa contenida que apenas se manifiesta en su rostro infantil. —Debes dormir —dice ella—. Son las dos de la madrugada y mañana tienes clases.</p>
-                <p>Roen la observa un instante más. —Anahlyn… —dice finalmente—. —¿Sí? —Te quiero.</p>
-                <p>La mujer siente que algo muy profundo y silencioso se rompe y se reconstruye al mismo tiempo dentro de su pecho. —Yo también te quiero, Roen.</p>
-                <p>El niño baja lentamente de la silla y se dirige hacia el lugar donde podrá descansar, llevando consigo un pensamiento nuevo que no sabe nombrar, pero que ya ha comenzado a habitar su interior como una presencia tenue: la idea de que alguien, en ese mundo frío, puede sostener su existencia con ternura.</p>
-            </div>
-
-            <div class="mt-20 flex justify-between pb-20">
-                <button onclick="goToPage(4)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Anterior</span>
-                </button>
-                <button onclick="goToPage(6)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <span>Siguiente</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </article>
-
-        <!-- PÁGINA 6 -->
-        <article id="page6" class="page-container reading-content">
-            <div class="mb-12 text-center">
-                <span class="text-neon-yellow text-xs tracking-[0.3em] uppercase">Página 6</span>
-                <h2 class="chapter-title text-4xl md:text-5xl mt-2 mb-4">Capítulo I</h2>
-                <div class="h-1 w-12 bg-neon-yellow mx-auto opacity-50"></div>
-            </div>
-
-            <div class="space-y-6 text-gray-300 font-light">
-                <p class="drop-cap">El sueño de Roen se disuelve lentamente, como una niebla que pierde densidad bajo la luz que comienza a filtrarse por las rendijas de la conciencia. No hay despertar brusco. No hay sobresalto. El regreso al mundo despierto ocurre con la suavidad propia de un cuerpo infantil que todavía no ha aprendido a resistirse a la mañana.</p>
-                
-                <p>Al principio solo existe el sonido. Pasos pequeños. Una respiración cercana. El crujido leve de las tablas del suelo del dormitorio. —Roen… —dice una voz infantil, ligeramente aguda—. Es hora de ir a la escuela.</p>
-
-                <p>Es Katherine. La niña lo observa desde el borde de la cama con la paciencia que tienen los niños que han aprendido a convivir con la rutina del orfanato. Roen parpadea lentamente. La luz de la mañana entra con timidez por la ventana alta, tocando el suelo con un resplandor pálido que parece no querer despertar completamente al edificio.</p>
-
-                <p>La noche todavía se niega a abandonar del todo el interior de los pasillos invisibles del orfanato, como si el lugar mismo resistiera el cambio de estado entre la oscuridad y el día. Roen se incorpora lentamente sobre la cama. Su cuerpo pequeño guarda un instante de resistencia natural contra el sueño que todavía se aferra a sus músculos infantiles.</p>
-
-                <p>—¿Ya es de mañana? —pregunta con voz adormecida. Katherine asiente. —Anahlyn dijo que te despertara, dormilón. La palabra “dormilón” no lleva burla; lleva familiaridad.</p>
-
-                <p>Roen se frota los ojos con las manos pequeñas antes de bajar de la cama. El suelo está frío, pero ya no produce el mismo sobresalto emocional de la noche anterior. La mente infantil comienza a preparar su cuerpo para la actividad del día. Se dirige hacia el área donde se encuentra su ropa escolar.</p>
-
-                <p>La rutina del orfanato ha enseñado a los niños movimientos precisos: vestirse, ordenar la cama, prepararse en silencio, evitar retrasos que puedan provocar regaños de los cuidadores más severos. Roen se coloca la camisa con cierta torpeza natural de su edad. Los botones son pequeños y requieren paciencia. Katherine lo observa, y en un gesto espontáneo se acerca para ayudarle con el último botón cerca del cuello.</p>
-
-                <p>No hablan mucho. El lenguaje de los niños dentro del orfanato a veces se expresa más en gestos que en frases completas. Cuando Roen termina de vestirse, se queda un segundo en silencio mirando la cama donde durmió. No hay juguetes propios sobre ella. Solo la manta ordenada cuidadosamente, como si la disciplina también fuera una forma de protección contra el caos del mundo exterior.</p>
-
-                <p>Desde el pasillo llega la voz de Anahlyn. —Roen, Katherine… ¡despierten al Rou dormilón! La voz tiene un tono juguetón, mezclado con autoridad maternal. Roen sonríe apenas al escucharla. Porque ese sonido significa que el día ha comenzado dentro del único espacio donde su existencia se siente ligeramente sostenida por el afecto humano.</p>
-
-                <p>Sale del dormitorio junto a Katherine. El orfanato durante el amanecer posee un aspecto diferente al de la noche. Las sombras se vuelven más pequeñas. Los pasillos muestran con mayor claridad sus grietas antiguas. Las ventanas dejan entrar un aire frío que huele a humedad, a tierra mojada y a historia detenida.</p>
-
-                <p>Anahlyn los espera en el área donde los niños se preparan para la escuela. —Buenos días —dice ella suavemente. Roen la mira y responde: —Buenos días. La simplicidad de la respuesta contiene toda la complejidad emocional que un niño de cuatro años puede expresar dentro de su mundo limitado pero profundamente sensible.</p>
-
-                <p>Anahlyn le ayuda a acomodar el cuello de la camisa antes de entregarle su pequeño bolso escolar. —Hoy debes estudiar y portarte bien —dice con ternura firme—. ¿De acuerdo? Roen asiente. El niño no comprende todavía la estructura social que la escuela representa, pero percibe que es un lugar donde deberá aprender cosas nuevas sobre el mundo.</p>
-
-                <p>Se acerca a Anahlyn y, con un gesto espontáneo, dice: —Te quiero. Anahlyn sonríe. —Yo también te quiero. El día está comenzando. Y Roen, sin saberlo todavía, está caminando hacia un mundo que empezará lentamente a moldear su forma de pensar, de sentir y de comprender la existencia humana.</p>
-            </div>
-
-            <div class="mt-20 flex justify-between pb-20">
-                <button onclick="goToPage(5)" class="btn-nav px-8 py-4 rounded-sm flex items-center space-x-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Anterior</span>
-                </button>
-                <button onclick="alert('Próximamente Capítulo II')" class="btn-nav px-8 py-4 rounded-sm">
-                    <span>Sig. Capítulo</span>
-                </button>
-            </div>
-        </article>
+        </div>
     </main>
 
+    <footer>
+        &copy; 2024 ROUSSEL BOOKS &bull; ALL RIGHTS RESERVED
+    </footer>
+
     <script>
-        const sidebar = document.getElementById('sidebar');
-        const menuToggle = document.getElementById('menu-toggle');
-        const closeMenu = document.getElementById('close-menu');
-        const progress = document.getElementById('progress');
-
-        // Navegación entre páginas
-        function goToPage(pageNum) {
-            const pages = document.querySelectorAll('.page-container');
-            pages.forEach(p => p.classList.remove('page-active'));
+        function navigateTo(url) {
+            const loader = document.getElementById('loader');
+            loader.style.width = '100%';
             
-            const activePage = document.getElementById(`page${pageNum}`);
-            if (activePage) {
-                activePage.classList.add('page-active');
+            // Simulación de haptic feedback
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(20);
             }
-            
-            sidebar.classList.add('closed');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(updateProgress, 150);
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
         }
 
-        // Toggle Sidebar
-        menuToggle.addEventListener('click', () => sidebar.classList.remove('closed'));
-        closeMenu.addEventListener('click', () => sidebar.classList.add('closed'));
-
-        // Progress Scroll Tracker
-        function updateProgress() {
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalHeight <= 0) {
-                progress.style.width = '0%';
-                return;
-            }
-            const scrollPercent = (window.scrollY / totalHeight) * 100;
-            progress.style.width = scrollPercent + '%';
-        }
-
-        window.addEventListener('scroll', updateProgress);
-        window.addEventListener('resize', updateProgress);
-        
-        // Initial call
-        updateProgress();
+        // Efecto parallax en el logo mediante ratón
+        document.addEventListener('mousemove', (e) => {
+            const logo = document.querySelector('.logo');
+            const x = (window.innerWidth / 2 - e.pageX) / 40;
+            const y = (window.innerHeight / 2 - e.pageY) / 40;
+            logo.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
     </script>
 </body>
 </html>
