@@ -1,5 +1,3 @@
-[TITLE] Biografía Roen
-
 [CHAPTER] Capítulo I
 
 [PAGE] Página 6
@@ -103,5 +101,6 @@ Anahlyn sonríe.
 —Yo también te quiero.
 
 El día está comenzando.
+
 
 Y Roen, sin saberlo todavía, está caminando hacia un mundo que empezará lentamente a moldear su forma de pensar, de sentir y de comprender la existencia humana.
