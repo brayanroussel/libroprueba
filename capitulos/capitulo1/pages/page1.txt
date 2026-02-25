@@ -1,5 +1,3 @@
-[TITLE] Biografía Roen
-
 [CHAPTER] Capítulo I
 
 [PAGE] Página 1
@@ -95,4 +93,5 @@ Un niño de cuatro años descubre que está vivo no por el dolor, ni por la aleg
 En el cristal manchado, su existencia se confirma.
 
 Y en esa confirmación silenciosa, bajo el aire melancólico y extraño del edificio cansado, comienza su historia.
+
 
