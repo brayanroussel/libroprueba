@@ -1,5 +1,3 @@
-[TITLE] Biografía Roen
-
 [CHAPTER] Capítulo I
 
 [PAGE] Página 4
@@ -111,5 +109,6 @@ Es un sonido vivo, humano, continuo.
 Roen asiente.
 
 La mujer comienza a caminar lentamente hacia el dormitorio mientras su voz se prepara para la historia que aún no ha decidido narrar.
+
 
 La noche continúa afuera, vasta y silenciosa, como un océano que existe más allá de las paredes del lugar donde un niño de cuatro años comienza a comprender, sin palabras, la diferencia entre el miedo y la ternura.
