@@ -1,5 +1,3 @@
-[TITLE] Biografía Roen
-
 [CHAPTER] Capítulo I
 
 [PAGE] Página 3
@@ -115,5 +113,6 @@ Avanza.
 Pequeño.
 
 Descalzo.
+
 
 Con la determinación silenciosa de quien todavía no entiende el mundo, pero ya ha comenzado a cuestionar su forma de existir dentro de él.
